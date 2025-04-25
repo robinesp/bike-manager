@@ -141,7 +141,7 @@
                 <mat-list-item class="hover:bg-gray-50">
                   <span matListItemTitle class="font-medium text-gray-700">Date Stolen</span>
                   <span matListItemLine class="text-gray-900">{{
-                    bike.date_stolen | date: 'medium'
+                    bike.date_stolen * 1000 | date
                   }}</span>
                 </mat-list-item>
               </mat-list>
