@@ -3,6 +3,7 @@ import tsParser from '@typescript-eslint/parser';
 import prettierPlugin from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
 import js from '@eslint/js';
+import cypressPlugin from 'eslint-plugin-cypress';
 
 export default [
   {
@@ -63,6 +64,23 @@ export default [
         spyOn: 'readonly',
         process: 'readonly',
       },
+    },
+  },
+  // Cypress configuration
+  {
+    files: ['cypress/**/*.ts', 'cypress/**/*.js', 'cypress.config.js'],
+    plugins: {
+      cypress: cypressPlugin,
+    },
+    languageOptions: {
+      globals: {
+        ...cypressPlugin.environments.globals,
+      },
+    },
+    rules: {
+      ...cypressPlugin.configs.recommended.rules,
+      'cypress/no-assigning-return-values': 'error',
+      'cypress/no-unnecessary-waiting': 'warn',
     },
   },
   {

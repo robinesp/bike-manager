@@ -1,0 +1,40 @@
+{
+  "bikes": [
+    {
+      "id": 1,
+      "title": "Test Bike 1",
+      "manufacturer_name": "Test Manufacturer",
+      "frame_model": "Test Model",
+      "year": 2023,
+      "frame_colors": ["Red"],
+      "thumb": "https://example.com/test-thumb.jpg",
+      "large_img": "https://example.com/large-test.jpg",
+      "status": "stolen",
+      "stolen": true,
+      "stolen_location": "New York, NY",
+      "date_stolen": 1643673600,
+      "description": "Test description",
+      "url": "http://example.com",
+      "api_url": "http://api.example.com",
+      "serial": "ABC123"
+    },
+    {
+      "id": 2,
+      "title": "Test Bike 2",
+      "manufacturer_name": "Test Manufacturer 2",
+      "frame_model": "Test Model 2",
+      "year": 2022,
+      "frame_colors": ["Blue", "Black"],
+      "thumb": "https://example.com/test-thumb-2.jpg",
+      "large_img": "https://example.com/large-test-2.jpg",
+      "status": "stolen",
+      "stolen": true,
+      "stolen_location": "San Francisco, CA",
+      "date_stolen": 1643673600,
+      "description": "Test description 2",
+      "url": "http://example.com/2",
+      "api_url": "http://api.example.com/2",
+      "serial": "DEF456"
+    }
+  ]
+}
