@@ -1,0 +1,152 @@
+<mat-card class="rounded-xl shadow-lg overflow-hidden">
+  <mat-card-header class="bg-gray-50 px-6 py-4">
+    <button
+      mat-button
+      color="primary"
+      (click)="goBack()"
+      class="flex items-center hover:bg-blue-50 transition-colors rounded-lg"
+    >
+      <mat-icon>arrow_back</mat-icon> <span class="ml-1 font-medium">Back to Search</span>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content class="p-6">
+    <div *ngIf="loading" class="flex flex-col items-center justify-center py-20">
+      <mat-spinner [diameter]="50" color="primary"></mat-spinner>
+      <p class="mt-5 text-gray-600 font-medium">Loading bike details...</p>
+    </div>
+
+    <div
+      *ngIf="error"
+      class="bg-red-50 text-red-700 p-5 rounded-lg flex items-center border border-red-200"
+    >
+      <mat-icon color="warn">error</mat-icon>
+      <span class="ml-3 font-medium">{{ error }}</span>
+      <button mat-stroked-button color="warn" class="ml-auto" (click)="goBack()">
+        Return to Search
+      </button>
+    </div>
+
+    <div *ngIf="bike && !loading" class="space-y-8">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">{{ bike.title || 'Unknown Bike' }}</h1>
+        <span
+          [class]="bike.stolen ? 'bg-red-500 text-white' : 'bg-green-500 text-white'"
+          class="px-4 py-1.5 text-sm font-semibold rounded-full shadow-sm"
+        >
+          {{ bike.stolen ? 'STOLEN' : 'NOT STOLEN' }}
+        </span>
+      </div>
+
+      <mat-card
+        class="mb-8 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="bg-gray-100 p-1">
+          <img
+            [src]="bike.large_img || bike.thumb || 'assets/images/no-image.png'"
+            alt="{{ bike.title }}"
+            class="w-full h-[400px] object-contain rounded-lg"
+          />
+        </div>
+      </mat-card>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <mat-card class="rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+          <mat-card-header class="bg-blue-50 p-4 border-b">
+            <mat-card-title class="text-xl font-bold text-blue-800"
+              >Bike Information</mat-card-title
+            >
+          </mat-card-header>
+          <mat-card-content>
+            <mat-list class="py-2">
+              <mat-list-item class="hover:bg-gray-50">
+                <span matListItemTitle class="font-medium text-gray-700">Manufacturer</span>
+                <span matListItemLine class="text-gray-900">{{
+                  bike.manufacturer_name || 'Unknown'
+                }}</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+              <mat-list-item class="hover:bg-gray-50">
+                <span matListItemTitle class="font-medium text-gray-700">Model</span>
+                <span matListItemLine class="text-gray-900">{{
+                  bike.frame_model || 'Unknown'
+                }}</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+              <mat-list-item class="hover:bg-gray-50">
+                <span matListItemTitle class="font-medium text-gray-700">Year</span>
+                <span matListItemLine class="text-gray-900">{{ bike.year || 'Unknown' }}</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+              <mat-list-item class="hover:bg-gray-50">
+                <span matListItemTitle class="font-medium text-gray-700">Serial</span>
+                <span matListItemLine class="text-gray-900">{{ bike.serial || 'Unknown' }}</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+              <mat-list-item class="hover:bg-gray-50">
+                <span matListItemTitle class="font-medium text-gray-700">Colors</span>
+                <span matListItemLine class="text-gray-900">{{
+                  bike.frame_colors.join(', ') || 'Unknown'
+                }}</span>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="flex flex-col gap-6">
+          <mat-card
+            *ngIf="bike.stolen"
+            class="rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+          >
+            <mat-card-header class="bg-red-50 p-4 border-b">
+              <mat-card-title class="text-xl font-bold text-red-800"
+                >Theft Information</mat-card-title
+              >
+            </mat-card-header>
+            <mat-card-content>
+              <mat-list class="py-2">
+                <mat-list-item class="hover:bg-gray-50">
+                  <span matListItemTitle class="font-medium text-gray-700">Stolen Location</span>
+                  <span matListItemLine class="text-gray-900">{{
+                    bike.stolen_location || 'Unknown'
+                  }}</span>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item class="hover:bg-gray-50">
+                  <span matListItemTitle class="font-medium text-gray-700">Date Stolen</span>
+                  <span matListItemLine class="text-gray-900">{{
+                    bike.date_stolen | date: 'medium'
+                  }}</span>
+                </mat-list-item>
+              </mat-list>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card
+            *ngIf="bike.description"
+            class="rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+          >
+            <mat-card-header class="bg-indigo-50 p-4 border-b">
+              <mat-card-title class="text-xl font-bold text-indigo-800">Description</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p class="p-4 text-gray-800 leading-relaxed">{{ bike.description }}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <a
+          [href]="bike.url"
+          target="_blank"
+          mat-raised-button
+          color="primary"
+          class="w-full py-3 flex items-center justify-center text-lg font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+        >
+          <mat-icon>open_in_new</mat-icon> <span class="ml-2">View on Bike Index</span>
+        </a>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

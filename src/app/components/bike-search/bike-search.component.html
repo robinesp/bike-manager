@@ -1,0 +1,74 @@
+<mat-card class="shadow-lg rounded-xl overflow-hidden border-0">
+  <mat-card-content class="p-6 md:p-8">
+    <!-- Search Form -->
+    <div class="mb-10">
+      <div class="flex flex-col md:flex-row items-start gap-0 md:gap-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Enter city name</mat-label>
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="city"
+            (keyup.enter)="onSearch()"
+            class="text-base"
+            placeholder="e.g. Amsterdam, Utrecht"
+          />
+          <mat-icon matPrefix class="text-gray-400 mr-2">search</mat-icon>
+        </mat-form-field>
+        <button mat-fab extended color="primary" (click)="onSearch()" class="!w-full md:!w-auto">
+          <mat-icon class="mr-2">search</mat-icon>
+          Search
+        </button>
+      </div>
+
+      <div *ngIf="error" class="mt-4 p-4 bg-red-50 text-red-600 rounded-lg flex items-center gap-3">
+        <mat-icon class="text-red-500">error</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex flex-col items-center justify-center py-16">
+      <mat-spinner [diameter]="50" color="primary"></mat-spinner>
+      <p class="mt-6 text-gray-500 font-medium">Searching for bikes...</p>
+    </div>
+
+    <!-- Results Section -->
+    <div *ngIf="searchPerformed && !loading">
+      <h2 *ngIf="bikes.length" class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+        Bikes in <span class="text-indigo-700 mx-2">{{ city }}</span>
+      </h2>
+
+      <!-- No Results Message -->
+      <div *ngIf="bikes.length === 0 && !error" class="bg-gray-50 rounded-xl p-10 text-center">
+        <div class="flex justify-center">
+          <mat-icon class="text-gray-400 text-5xl">search_off</mat-icon>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-700 mt-4">No bikes found in {{ city }}</h3>
+        <p class="text-gray-500 mt-2">Try searching for a different city</p>
+      </div>
+
+      <!-- Bikes Grid using Tailwind -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div *ngFor="let bike of bikes">
+          <app-bike-card [bike]="bike"></app-bike-card>
+        </div>
+      </div>
+
+      <!-- Infinite Scroll Loading Indicator -->
+      <div *ngIf="isLoadingMore" class="flex justify-center items-center py-8">
+        <mat-spinner [diameter]="36" color="primary"></mat-spinner>
+        <span class="ml-4 text-gray-600 font-medium">Loading more bikes...</span>
+      </div>
+
+      <!-- End of Results Message -->
+      <div
+        *ngIf="allBikesLoaded && bikes.length > 0"
+        class="text-center py-8 text-gray-500 flex items-center justify-center gap-2"
+      >
+        <mat-icon class="text-green-500">check_circle</mat-icon>
+        <span>All bikes loaded</span>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

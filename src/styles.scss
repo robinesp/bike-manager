@@ -1,0 +1,30 @@
+@use '@angular/material' as mat;
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+@import './tailwind.css';
+
+// html,
+// body {
+//   height: 100%;
+// }
+
+/* Customizes the Angular Material theme */
+:root {
+  @include mat.theme(
+    (
+      typography: Roboto,
+      density: 0,
+    )
+  );
+  @include mat.fab-overrides(
+    (
+      extended-container-shape: 4px,
+      extended-container-height: var(--mat-form-field-container-height),
+    )
+  );
+}
+
+/* Fixes conflict between tailwind and material input field */
+.mdc-notched-outline__notch {
+  border-right: none;
+}
