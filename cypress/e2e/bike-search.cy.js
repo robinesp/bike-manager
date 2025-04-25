@@ -11,7 +11,8 @@ describe('Bike Search', () => {
 
   it('should display error when searching with empty city', () => {
     cy.get('button').contains('Search').click();
-    cy.get('.text-red-600, .error-message').should('be.visible');
+    cy.get('.text-red-600').should('be.visible');
+    cy.get('.text-red-600').should('contain.text', 'Please enter a city name');
   });
 
   it('should search for bikes in a valid city and display results', () => {
@@ -48,5 +49,16 @@ describe('Bike Search', () => {
   it('should handle special characters in search input', () => {
     cy.searchBikes('San Francisco, CA');
     cy.get('app-bike-card').should('exist');
+  });
+
+  it('should have search functionality with proper state indicators', () => {
+    cy.get('input[matInput]').as('searchInput');
+    cy.get('@searchInput').clear();
+    cy.get('@searchInput').type('Test City');
+
+    cy.get('.flex.flex-col.items-center.justify-center.py-16').should('not.exist');
+
+    cy.get('button').contains('Search').click();
+    cy.url().should('include', 'city=Test');
   });
 });

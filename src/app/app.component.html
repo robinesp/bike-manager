@@ -2,7 +2,7 @@
   <!-- Header -->
   <mat-toolbar color="primary" class="sticky top-0 z-10 shadow-lg bg-blue-100">
     <div class="container mx-auto px-4 md:px-12 py-2 flex justify-between items-center">
-      <a routerLink="/" class="flex items-center gap-3 text-white">
+      <a routerLink="/" (click)="clearSearch()" class="flex items-center gap-3 text-white">
         <mat-icon class="text-2xl">directions_bike</mat-icon>
         <span class="text-xl font-bold tracking-wider uppercase font-sans">Bike Manager</span>
       </a>

@@ -16,7 +16,8 @@
       "description": "Test description",
       "url": "http://example.com",
       "api_url": "http://api.example.com",
-      "serial": "ABC123"
+      "serial": "ABC123",
+      "stolen_coordinates": [40.7128, -74.006]
     },
     {
       "id": 2,
@@ -34,7 +35,8 @@
       "description": "Test description 2",
       "url": "http://example.com/2",
       "api_url": "http://api.example.com/2",
-      "serial": "DEF456"
+      "serial": "DEF456",
+      "stolen_coordinates": [37.7749, -122.4194]
     }
   ]
 }

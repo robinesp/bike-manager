@@ -4,6 +4,7 @@ import { BikeDetailComponent } from './components/bike-detail/bike-detail.compon
 
 export const routes: Routes = [
   { path: '', component: BikeSearchComponent },
+  { path: 'search', component: BikeSearchComponent },
   { path: 'bikes/:id', component: BikeDetailComponent },
   { path: '**', redirectTo: '' },
 ];

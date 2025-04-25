@@ -5,6 +5,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { SearchStateService } from './services/search-state.service';
 
 @Component({
   selector: 'app-root',
@@ -24,4 +25,10 @@ import { MatCardModule } from '@angular/material/card';
 export class AppComponent {
   title = 'bike-manager';
   logoPath = '../assets/images/bike-logo.svg';
+
+  constructor(private searchStateService: SearchStateService) {}
+
+  clearSearch(): void {
+    this.searchStateService.clearSearchState();
+  }
 }

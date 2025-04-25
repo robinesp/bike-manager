@@ -4,7 +4,9 @@ Cypress.Commands.add('bikeCardShouldContain', (bikeCard, title, manufacturer) =>
 });
 
 Cypress.Commands.add('searchBikes', cityName => {
-  cy.get('input[matInput]').clear().type(cityName);
+  cy.get('input[matInput]').as('searchInput');
+  cy.get('@searchInput').clear();
+  cy.get('@searchInput').type(cityName);
   cy.get('button').contains('Search').click();
   cy.wait(1000);
 });

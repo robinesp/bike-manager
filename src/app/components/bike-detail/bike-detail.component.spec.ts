@@ -3,6 +3,7 @@ import { BikeDetailComponent } from './bike-detail.component';
 import { of, throwError, Subscription } from 'rxjs';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BikeService } from '../../services/bike.service';
+import { SearchStateService } from '../../services/search-state.service';
 import { Bike } from '../../models/bike.model';
 
 // Type for param map subscription callback
@@ -28,12 +29,24 @@ describe('BikeDetailComponent', () => {
     getBikeDetails: jest.fn(),
   } as unknown as BikeService;
 
+  const mockSearchStateService = {
+    searchPerformed: false,
+    lastSearchCity: 'Amsterdam',
+    clearSearchState: jest.fn(),
+    saveSearchState: jest.fn(),
+  } as unknown as SearchStateService;
+
   beforeEach(() => {
     // Reset mocks
     jest.clearAllMocks();
 
     // Create component with mocked dependencies
-    component = new BikeDetailComponent(mockActivatedRoute, mockRouter, mockBikeService);
+    component = new BikeDetailComponent(
+      mockActivatedRoute,
+      mockRouter,
+      mockBikeService,
+      mockSearchStateService
+    );
 
     // Setup default mock behavior
     (mockActivatedRoute.paramMap.subscribe as jest.Mock).mockImplementation((fn: unknown) => {
@@ -80,9 +93,19 @@ describe('BikeDetailComponent', () => {
     expect(mockBikeService.getBikeDetails).toHaveBeenCalledWith(123);
   });
 
-  it('should navigate back when goBack is called', () => {
+  it('should navigate back to root when goBack is called with no search performed', () => {
+    mockSearchStateService.searchPerformed = false;
     component.goBack();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
+  });
+
+  it('should navigate back to search with params when goBack is called with search performed', () => {
+    mockSearchStateService.searchPerformed = true;
+    mockSearchStateService.lastSearchCity = 'Amsterdam';
+    component.goBack();
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/search'], {
+      queryParams: { city: 'Amsterdam' },
+    });
   });
 
   it('should set error state when API request fails', () => {

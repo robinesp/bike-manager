@@ -1,11 +1,24 @@
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { AppComponent } from './app.component';
+import { SearchStateService } from './services/search-state.service';
 
 describe('AppComponent', () => {
   let component: AppComponent;
+  let mockSearchStateService: SearchStateService;
 
   beforeEach(() => {
-    component = new AppComponent();
+    mockSearchStateService = {
+      clearSearchState: jest.fn(),
+      saveSearchState: jest.fn(),
+      lastSearchCity: '',
+      searchResults: [],
+      currentPage: 1,
+      searchPerformed: false,
+      needsClear: false,
+      requestClearState: jest.fn(),
+    } as unknown as SearchStateService;
+
+    component = new AppComponent(mockSearchStateService);
   });
 
   it('should create the app', () => {
@@ -28,5 +41,10 @@ describe('AppComponent', () => {
     // Verify title doesn't change unexpectedly
     const cachedTitle = component.title;
     expect(component.title).toEqual(cachedTitle);
+  });
+
+  it('should request clearing search state when clearSearch is called', () => {
+    component.clearSearch();
+    expect(mockSearchStateService.clearSearchState).toHaveBeenCalled();
   });
 });

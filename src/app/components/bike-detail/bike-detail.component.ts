@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BikeService } from '../../services/bike.service';
+import { SearchStateService } from '../../services/search-state.service';
 import { Bike } from '../../models/bike.model';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -36,7 +37,8 @@ export class BikeDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private bikeService: BikeService
+    private bikeService: BikeService,
+    private searchStateService: SearchStateService
   ) {}
 
   ngOnInit(): void {
@@ -67,6 +69,14 @@ export class BikeDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    // If there's a previous search, go back to home page with search results
+    if (this.searchStateService && this.searchStateService.searchPerformed) {
+      this.router.navigate(['/search'], {
+        queryParams: { city: this.searchStateService.lastSearchCity },
+      });
+    } else {
+      // If no previous search, just go to home page
+      this.router.navigate(['/']);
+    }
   }
 }

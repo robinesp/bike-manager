@@ -1,7 +1,9 @@
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
 import { BikeSearchComponent } from './bike-search.component';
-import { of, throwError } from 'rxjs';
+import { of, throwError, Subject } from 'rxjs';
 import { BikeService } from '../../services/bike.service';
+import { SearchStateService } from '../../services/search-state.service';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 
 describe('BikeSearchComponent', () => {
   let component: BikeSearchComponent;
@@ -10,6 +12,27 @@ describe('BikeSearchComponent', () => {
   const mockBikeService = {
     searchBikes: jest.fn(),
   } as unknown as BikeService;
+
+  // Mock SearchStateService
+  const mockSearchStateService = {
+    searchPerformed: false,
+    lastSearchCity: '',
+    searchResults: [],
+    currentPage: 1,
+    clearSearchState: jest.fn(),
+    saveSearchState: jest.fn(),
+  } as unknown as SearchStateService;
+
+  // Mock Router
+  const mockRouter = {
+    navigate: jest.fn(),
+  } as unknown as Router;
+
+  // Mock ActivatedRoute
+  const mockQueryParams = new Subject<Params>();
+  const mockActivatedRoute = {
+    queryParams: mockQueryParams.asObservable(),
+  } as unknown as ActivatedRoute;
 
   // Original window properties
   let originalInnerHeight: number;
@@ -50,7 +73,12 @@ describe('BikeSearchComponent', () => {
     );
 
     // Create component with mocked service
-    component = new BikeSearchComponent(mockBikeService);
+    component = new BikeSearchComponent(
+      mockBikeService,
+      mockSearchStateService,
+      mockRouter,
+      mockActivatedRoute
+    );
 
     // Mock window and document for onScroll testing
     Object.defineProperty(window, 'innerHeight', {
@@ -99,6 +127,8 @@ describe('BikeSearchComponent', () => {
     expect(component.loading).toBe(false);
     expect(component.searchPerformed).toBe(true);
     expect(component.bikes.length).toBe(2);
+    expect(mockRouter.navigate).toHaveBeenCalled();
+    expect(mockSearchStateService.saveSearchState).toHaveBeenCalled();
   });
 
   it('should set error when searching with empty city', () => {
@@ -122,6 +152,69 @@ describe('BikeSearchComponent', () => {
     expect(mockBikeService.searchBikes).toHaveBeenCalledWith('New York', 2, 10);
     expect(component.currentPage).toBe(2);
     expect(component.isLoadingMore).toBe(false);
+    expect(mockSearchStateService.saveSearchState).toHaveBeenCalled();
+  });
+
+  it('should restore search state from service when provided', () => {
+    // Setup search state
+    mockSearchStateService.searchPerformed = true;
+    mockSearchStateService.lastSearchCity = 'Amsterdam';
+    mockSearchStateService.searchResults = [
+      {
+        id: 3,
+        title: 'Restored Bike',
+        stolen: false,
+        frame_colors: ['blue'],
+        manufacturer_name: 'Restored Manufacturer',
+        year: 2021,
+        frame_model: 'Test Model',
+        serial: 'ABC123',
+        thumb: '',
+        large_img: '',
+        url: 'http://example.com',
+        api_url: 'http://api.example.com',
+        date_stolen: 0,
+        description: '',
+        status: 'stolen',
+        stolen_location: 'Amsterdam',
+      },
+    ];
+    mockSearchStateService.currentPage = 2;
+
+    // Initialize component
+    component.ngOnInit();
+
+    // Emit empty query params to trigger subscription
+    mockQueryParams.next({});
+
+    // Verify state was restored
+    expect(component.city).toBe('Amsterdam');
+    expect(component.bikes.length).toBe(1);
+    expect(component.bikes[0].title).toBe('Restored Bike');
+    expect(component.currentPage).toBe(2);
+    expect(component.searchPerformed).toBe(true);
+  });
+
+  it('should perform search when URL has city parameter but no search state', () => {
+    // No search state in service
+    mockSearchStateService.searchPerformed = false;
+
+    // Initialize component
+    component.ngOnInit();
+
+    // Emit query params with city
+    mockQueryParams.next({ city: 'Berlin' });
+
+    // Verify search was performed with URL param
+    expect(component.city).toBe('Berlin');
+    expect(mockBikeService.searchBikes).toHaveBeenCalledWith('Berlin', 1, 10);
+  });
+
+  it('should clear previous search state before performing new search', () => {
+    component.city = 'New York';
+    component.onSearch();
+
+    expect(mockSearchStateService.clearSearchState).toHaveBeenCalled();
   });
 
   it('should handle API errors when searching', () => {
