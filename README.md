@@ -1,90 +1,115 @@
 # Bike Manager
 
-A modern Angular application that allows users to search for bikes by city and view detailed information about each bike. This application is built using the [Bike Index API](https://bikeindex.org/documentation/api_v3).
-
-## Features
-
-- **Bike Search**: Search for bikes by city name
-- **Search Results**: View a list of bikes with key information and link to details
-- **Bike Details**: See comprehensive information about a specific bike including images, manufacturer details, and more
-- **Responsive Design**: Optimized for both desktop and mobile devices
+An Angular application that allows users to search for bikes by city and view detailed information about each bike. This application is built using the [Bike Index API](https://bikeindex.org/documentation/api_v3).
 
 ## Tech Stack
 
-- **Angular**: Front-end framework
-- **TypeScript**: Programming language
-- **SCSS**: Styling
-- **Bike Index API**: Data source
+- **Frontend**:
 
-## Getting Started
+  - Angular 19 (Latest version)
+  - TypeScript
+  - TailwindCSS for styling
+  - Angular Material UI components
+  - ESLint & Prettier for linting and formatting
+
+- **Backend/SSR**:
+
+  - Node.js with Express
+  - Angular SSR (@angular/ssr)
+
+- **Testing**:
+
+  - Jest for unit testing
+  - Cypress for end-to-end testing
+
+## Installation
 
 ### Prerequisites
 
-- Node.js (version 14.x or later)
-- npm (version 6.x or later)
+- Node.js (version 20.x or later)
+- npm (version 8.x or later)
 
-### Installation
+### Setup Instructions
 
 1. Clone the repository:
 
-   ```
-   git clone https://github.com/yourusername/bike-manager.git
+   ```bash
+   git clone https://github.com/robinesp/bike-manager.git
    cd bike-manager
    ```
 
 2. Install dependencies:
 
-   ```
+   ```bash
    npm install
    ```
 
 3. Start the development server:
 
-   ```
+   ```bash
    npm start
    ```
 
 4. Open your browser and navigate to `http://localhost:4200`
 
-## Project Structure
+## Available Scripts
 
+- `npm start` - Start the development server
+- `npm run build` - Build the application for production
+- `npm run serve:ssr` - Run the server-side rendering server
+- `npm run lint` - Lint the codebase
+- `npm run format` - Format code with Prettier
+- `npm test` - Run unit tests with Jest
+- `npm run cypress:open` - Open Cypress for E2E testing
+- `npm run cypress:run` - Run Cypress tests in headless mode
+
+## Building for Production
+
+To build the application for production, run:
+
+```bash
+npm run build
 ```
-bike-manager/
-├── src/
-│   ├── app/
-│   │   ├── components/
-│   │   │   ├── bike-search/    # Bike search component
-│   │   │   └── bike-detail/    # Bike detail component
-│   │   ├── models/             # TypeScript interfaces
-│   │   ├── services/           # API services
-│   │   ├── app.component.*     # Root component
-│   │   └── app.routes.ts       # Application routes
-│   ├── assets/                 # Static assets
-│   │   └── images/             # Image files
-│   └── styles.css              # Global styles
-└── ...
+
+This will create a production-ready build in the `dist/` directory.
+
+## Server-Side Rendering (SSR)
+
+This application implements server-side rendering using Angular Universal and Express. SSR provides several key benefits:
+
+1. **Improved Performance**: Initial page load is faster as the server sends pre-rendered HTML
+2. **Better SEO**: Search engines can crawl the content more effectively
+3. **Enhanced User Experience**: Users see content immediately while JavaScript is loading
+
+To run the SSR server after building the application:
+
+```bash
+npm run serve:ssr
 ```
 
-## API Integration
+The server will be available at `http://localhost:4000` by default.
 
-This application uses the Bike Index API v3:
+## Testing
 
-- `GET /v3/search` - Search for bikes by location
-- `GET /v3/bikes/{id}` - Get detailed information about a specific bike
+### Unit Testing
 
-## Future Improvements
+Unit tests are written using Jest and the Angular testing utilities. To run the unit tests:
 
-- Add advanced search filters
-- Implement user authentication to save favorite bikes
-- Add a map view to show bike locations
-- Add pagination for search results
-- Support for multiple languages
+```bash
+npm test
+```
 
-## License
+Unit tests are located next to the files they test with the naming pattern `*.unit.spec.ts`.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### End-to-End Testing
 
-## Acknowledgments
+End-to-end tests are written using Cypress. To run the E2E tests:
 
-- [Bike Index](https://bikeindex.org/) for providing the API
-- Angular team for the excellent framework
+```bash
+# Open Cypress test runner
+npm run cypress:open
+
+# Run tests headlessly
+npm run cypress:run
+```
+
