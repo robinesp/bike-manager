@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BikeService } from '../../services/bike.service';
 import { Bike } from '../../models/bike.model';
@@ -24,6 +24,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatBadgeModule,
     MatListModule,
     MatDividerModule,
+    NgOptimizedImage,
   ],
   templateUrl: './bike-detail.component.html',
 })
@@ -51,6 +52,7 @@ export class BikeDetailComponent implements OnInit {
 
   fetchBikeDetails(id: number): void {
     this.loading = true;
+
     this.bikeService.getBikeDetails(id).subscribe({
       next: response => {
         this.bike = response.bike;

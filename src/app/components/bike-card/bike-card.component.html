@@ -3,8 +3,18 @@
 >
   <div class="relative h-56 bg-gray-100">
     <img
-      [src]="bike.thumb || 'assets/images/no-image.png'"
-      alt="{{ bike.title }}"
+      *ngIf="bike.thumb"
+      [src]="bike.thumb"
+      [alt]="bike.title || 'Bike image'"
+      loading="lazy"
+      class="w-full h-full object-cover"
+    />
+    <img
+      *ngIf="!bike.thumb"
+      ngSrc="assets/images/no-image.png"
+      alt="No image available"
+      [width]="400"
+      [height]="300"
       class="w-full h-full object-cover"
     />
     <div *ngIf="bike.stolen" class="absolute top-3 right-3">
